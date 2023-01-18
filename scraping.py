@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from time import time
 
 
 
@@ -37,7 +38,34 @@ class Scrapper:
                'product_image':image_link,
                'price' : price}
 
-    
+    def scrape_flanco(self,product):
+        self.driver.get('https://www.flanco.ro/')
+        search_bar = self.driver.find_element(By.XPATH,'//*[@id="searchingfield"]')
+        search_bar.send_keys(product)
+        search_bar.send_keys(Keys.ENTER)
+        select = Select(self.driver.find_element(By.ID,'sorter'))
+        select.select_by_visible_text('Pret Ascendent')
+
+        all_products = self.driver.find_element(By.CLASS_NAME,'category-list-view')
+        product_link = all_products.find_element(By.TAG_NAME,'li').find_element(By.CLASS_NAME,'product-item-info').find_element(By.XPATH,'//*[@id="product-item-info_187852"]/a[1]').get_attribute('href')
+        self.driver.get(product_link)
+        product_image = self.driver.find_element(By.XPATH,'/html/body/div[2]/main/div[2]/div/div/div[1]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/figure[1]/a/img').get_attribute('src')
+        product_price = self.driver.find_element(By.XPATH,'//*[@id="faddtocart"]/div[1]/div/div/span[2]/span').text
+
+        return {
+            'product_link': product_link,
+            'product_image': product_image,
+            'price': product_price}
+        }
+
+
+
+
+
+
+
+
+
 
 
 
