@@ -56,6 +56,19 @@ class Scrapper:
             'product_link': product_link,
             'product_image': product_image,
             'price': product_price}
+
+
+    def scrape_altex(self,product):
+
+        self.driver.get('https://altex.ro/cauta/?q='+"%20".join([x for x in product.split() if len(x) > 0]))
+        best_product = self.driver.find_elements(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]')[0]
+        product_link = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a').get_attribute('href')
+        product_image = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/div[1]/img').get_attribute('src')
+        product_price = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/div[4]/div/div[2]/span/span[1]').text +' lei'
+        return {
+            'product_link':product_link,
+            'product_image':product_image,
+            'price':product_price
         }
 
 
@@ -83,8 +96,17 @@ class Scrapper:
 
 
 
+
+
+
+
+
+
+
+
 sc = Scrapper()
-sc.scrape_flanco('Apple iPhone 14, 128GB, 5G, Purple')
+sc.scrape_altex('Apple iPhone 14 128GB 5G Purple')
+
 
 
 
