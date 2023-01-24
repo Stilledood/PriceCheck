@@ -33,10 +33,14 @@ class Scrapper:
 
         image_link =  best_product.find_element(By.CLASS_NAME,'w-100').get_attribute('src')
         price = best_product.find_element(By.XPATH,'//*[@id="card_grid"]/div[1]/div/div/div[4]/div[1]/p[2]').text
+        name  =  best_product.find_element(By.CSS_SELECTOR,'#card_grid > div:nth-child(1) > div > div > div.card-v2-info > div > h2 > a').text
+
+
 
         return {'product_link':link,
                'product_image':image_link,
-               'price' : price}
+               'price' : price,
+                'name':name}
 
     def scrape_flanco(self,product):
         self.driver.get('https://www.flanco.ro/')
@@ -149,7 +153,7 @@ class Scrapper:
 
 
 sc = Scrapper()
-sc.scrape_cel('Apple iPhone 14 128GB 5G ')
+sc.scrape_flanco('Apple iPhone 14 128GB 5G ')
 
 
 
