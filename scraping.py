@@ -71,6 +71,50 @@ class Scrapper:
             'price':product_price
         }
 
+    def scrape_cel(self,product):
+        self.driver.get('https://www.cel.ro/')
+        search_bar = self.driver.find_element(By.ID,"keyword")
+        search_bar.send_keys(product)
+        search_bar.send_keys(Keys.ENTER)
+        best_products = []
+        for i in range(1,5):
+            best_products.append(self.driver.find_element(By.CSS_SELECTOR,f"#bodycode > div.listingPageWrapper > div.listingWrapper > div.productlisting > div:nth-child({i})"))
+        best_item_price = None
+        best_item_link = None
+        best_item_image = None
+        best_item_name = None
+        for element in best_products:
+            product_name = element.find_element(By.CLASS_NAME,"productTitle").text
+            corect_product = True if all(x in product_name for x in product.split()) else False
+            if corect_product:
+                product_price =int( element.find_element(By.CLASS_NAME,"pret_n").text[:-3])
+                product_link = element.find_element(By.TAG_NAME,"a").get_attribute("href")
+                product_image = element.find_element(By.TAG_NAME,"img").get_attribute("src")
+                if best_item_price is None:
+                    best_item_price = product_price
+                    best_item_image = product_image
+                    best_item_link = product_link
+                    best_item_name = product_name
+                elif product_price < best_item_price:
+                    best_item_price = product_price
+                    best_item_image = product_image
+                    best_item_link = product_link
+                    best_item_name = product_name
+
+        return {
+            'product_link':best_item_link,
+            'product_image':best_item_image,
+            'price':best_item_price,
+            'name':best_item_name
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -105,7 +149,7 @@ class Scrapper:
 
 
 sc = Scrapper()
-sc.scrape_altex('Apple iPhone 14 128GB 5G Purple')
+sc.scrape_cel('Apple iPhone 14 128GB 5G ')
 
 
 
