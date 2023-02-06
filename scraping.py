@@ -54,12 +54,16 @@ class Scrapper:
         product_link = all_products.find_element(By.TAG_NAME,'li').find_element(By.CLASS_NAME,'product-item-info').find_element(By.XPATH,'//*[@id="product-item-info_187852"]/a[1]').get_attribute('href')
         self.driver.get(product_link)
         product_image = self.driver.find_element(By.XPATH,'/html/body/div[2]/main/div[2]/div/div/div[1]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/figure[1]/a/img').get_attribute('src')
-        product_price = self.driver.find_element(By.XPATH,'//*[@id="faddtocart"]/div[1]/div/div/span[2]/span').text
+        product_price = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div/div/div[1]/div[2]/div[1]/div/div[1]/div[2]/div/span/span').text
+        product_name = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div/div/div[1]/div[1]/div[1]/div[1]/div[1]/div/h1/span').text
+
 
         return {
             'product_link': product_link,
             'product_image': product_image,
-            'price': product_price}
+            'price': product_price,
+            'name': product_name,
+        }
 
 
     def scrape_altex(self,product):
@@ -68,11 +72,14 @@ class Scrapper:
         best_product = self.driver.find_elements(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]')[0]
         product_link = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a').get_attribute('href')
         product_image = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/div[1]/img').get_attribute('src')
-        product_price = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/div[4]/div/div[2]/span/span[1]').text +' lei'
+        product_price = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/div[4]/div/div[2]/span/span[1]').text
+        product_name = best_product.find_element(By.XPATH,'//*[@id="__next"]/div[2]/div[1]/main/div[2]/div/div[2]/div[2]/ul[2]/li[1]/a/h2').text
+
         return {
             'product_link':product_link,
             'product_image':product_image,
-            'price':product_price
+            'price':product_price,
+            'name':product_name,
         }
 
     def scrape_cel(self,product):
@@ -111,6 +118,15 @@ class Scrapper:
             'price':best_item_price,
             'name':best_item_name
         }
+
+    def scrape_sites(self,product):
+        return {
+            "emag":self.scrape_emag(product),
+            "flanco":self.scrape_flanco(product),
+            "cel": self.scrape_cel(product),
+            "altex":self.scrape_altex(product)
+        }
+
 
 
 
@@ -153,7 +169,7 @@ class Scrapper:
 
 
 sc = Scrapper()
-sc.scrape_flanco('Apple iPhone 14 128GB 5G ')
+sc.scrape_sites('Apple iPhone 14 128GB 5G ')
 
 
 
