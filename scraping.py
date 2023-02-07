@@ -178,11 +178,4 @@ class Scrapper:
 
 
 
-sc = Scrapper()
-a = sc.scrape_sites('New Glow ')
-print(a)
-
-
-
-
 

@@ -1,5 +1,13 @@
 import customtkinter
-from .scraping import Scrapper
+from tkinter import *
+from PIL import Image
+from PIL import ImageTk
+import requests
+from scraping import Scrapper
+
+
+
+
 customtkinter.set_appearance_mode("dark")
 
 class SearchFrame(customtkinter.CTkFrame):
@@ -11,8 +19,19 @@ class SearchFrame(customtkinter.CTkFrame):
 
 class ResultFrame(customtkinter.CTkFrame):
 
-    def __init__(self,master,**kwargs):
+    def __init__(self,master,result = None,**kwargs):
         super().__init__(master,**kwargs)
+        if result:
+            image =Image.open( requests.get('https://s13emagst.akamaized.net/products/48592/48591194/images/res_386d8b602076b952c56b1d3411c2e473.jpg?width=720&height=720&hash=0CAE43D3D9DA08F8D44D298826D7C9CF',stream=True).raw)
+            ph = ImageTk.PhotoImage(image)
+            self.immage = customtkinter.CTkImage(light_image=image,size=(100,100))
+            label = customtkinter.CTkLabel(image=self.immage,master=self,fg_color='white',text='')
+            label.place(relx=0,rely=0)
+        else:
+            pass
+
+
+
         
 
 
@@ -34,8 +53,15 @@ class App(customtkinter.CTk):
 
         self.progress_bar = customtkinter.CTkProgressBar(master=self)
         self.progress_bar.place(relx=0.7,rely=0.5)
+        self.image = ResultFrame(master=self,width=100,height=100,fg_color="white")
+        self.image.grid(row=1,column=0,padx=0,pady=20)
 
     def generate_results(self):
+        scrapper_instance = Scrapper()
+        product = self.search_entry.get()
+        result = scrapper_instance.scrape_sites(product)
+        result_frame = ResultFrame(result)
+
 
 
 
