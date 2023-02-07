@@ -23,8 +23,14 @@ class SingleProductFrame(customtkinter.CTkFrame):
         super().__init__(master,**kwargs)
 
     def add_data(self,name,prod):
-        self.store_name = customtkinter.CTkButton(text=name,master=self,width=70,height=25,border_width=0,corner_radius=10)
-        self.store_name.place(relx=0.5,rely=0.5)
+        if len(prod) > 1:
+            self.store_name = customtkinter.CTkButton(text=name,master=self,width=70,height=25,border_width=0,corner_radius=10)
+            self.store_name.place(relx=0.1,rely=0.1)
+            self.product_image = customtkinter.CTkImage(Image.open(requests.get(prod['product_image'],stream=True).raw))
+            self.product_label_image = customtkinter.CTkLabel(self,image=self.product_image,width=100,height=100,corner_radius=10)
+            self.product_label_image.place(relx=0.3,rely=0.1)
+        
+
 
 
 
