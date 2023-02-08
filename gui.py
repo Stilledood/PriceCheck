@@ -4,6 +4,7 @@ from PIL import Image
 from PIL import ImageTk
 import requests
 from scraping import Scrapper
+import webbrowser
 
 
 
@@ -18,12 +19,32 @@ class SingleProductFrame(customtkinter.CTkFrame):
         super().__init__(master,**kwargs)
 
     def add_data(self,name,prod):
+        def open_page():
+            webbrowser.open(prod['product_link'])
+
         if len(prod) > 1:
-            self.store_name = customtkinter.CTkButton(text=name,master=self,width=100,height=25,border_width=0,corner_radius=10,text_color='#ECF0F1',fg_color='#E74C3C')
-            self.store_name.place(relx=0.1,rely=0.2)
-            self.product_image = customtkinter.CTkImage(Image.open(requests.get(prod['product_image'],stream=True).raw),size=(70,70))
+            self.store_name = customtkinter.CTkLabel(master=self,width=100,height=30,text=f"Store: {name.title()}",fg_color='#E74C3C',corner_radius=10)
+            self.store_name.place(relx=0.4,rely=0.3)
+
+            self.store_name_background = customtkinter.CTkLabel(master=self, width=106, height=36,
+                                                                text=f"{prod['name'].title()}",
+                                                                fg_color='#E74C3C', corner_radius=10, )
+            self.store_name_background.place(relx=0.1, rely=0.035)
+            self.store_name = customtkinter.CTkLabel(master=self, width=100, height=30, text=f"{prod['name'].title()}",
+                                                     fg_color='#ECF0F1', corner_radius=10,)
+            self.store_name.place(relx=0.1, rely=0.05)
+            self.product_price_label = customtkinter.CTkLabel(master=self,width=100,height=30,text=f"Price: {prod['price']} Lei",fg_color='#E74C3C',corner_radius=10)
+            self.product_price_label.place(relx=0.4,rely=0.5)
+            self.product_link_button = customtkinter.CTkButton(master=self,text='Product Link',height=30,width=100,fg_color='#E74C3C',corner_radius=10,command=open_page)
+            self.product_link_button.place(relx=0.4,rely=0.7)
+
+            self.product_image = customtkinter.CTkImage(Image.open(requests.get(prod['product_image'],stream=True).raw),size=(100,100))
             self.product_label_image = customtkinter.CTkLabel(self,image=self.product_image,width=100,height=100,corner_radius=10,text='')
-            self.product_label_image.place(relx=0.3,rely=0.1)
+            self.product_label_image.place(relx=0.1,rely=0.3)
+
+
+
+
 
 
 

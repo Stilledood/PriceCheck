@@ -39,7 +39,7 @@ class Scrapper:
 
             return {'product_link':link,
                    'product_image':image_link,
-                   'price' : price,
+                   'price' : price[:-3],
                     'name':name}
         except:
             return {"emag":"No results"}
