@@ -5,11 +5,20 @@ from PIL import ImageTk
 import requests
 from scraping import Scrapper
 import webbrowser
-
-
+from threading import Thread
 
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
+
+class ResultsScrape(Thread):
+    def __init__(self,scrapper_instance,product_name):
+        super().__init__()
+        self.result = None
+        self.scrapper = scrapper_instance
+        self.product = product_name
+
+    def run(self):
+        self.result = self.scrapper.scrape_sites(self.product)
 
 
 
@@ -81,23 +90,45 @@ class App(customtkinter.CTk):
 
 
 
-        self.search_button = customtkinter.CTkButton(master=self,width=80,height=30,border_width=0,corner_radius=8,text="Search",text_color='white',command=self.generate_results,fg_color='#E74C3C')
+        self.search_button = customtkinter.CTkButton(master=self,width=80,height=30,border_width=0,corner_radius=8,text="Search",text_color='white',command=self.handle_scraping,fg_color='#E74C3C')
         self.search_button.place(relx=0.16,rely=0.25)
         self.search_entry = customtkinter.CTkEntry(master=self,placeholder_text="Enter product name",width=220,height=40,border_width=2,corner_radius=10,fg_color='#ECF0F1',border_color='#E74C3C')
         self.search_entry.place(relx=0.1,rely=0.2)
         self.image = ResultFrame(master=self,width=600,height=800,fg_color="white")
         self.image.place(relx=0.5,rely=0)
-
-    def generate_results(self):
-        #scrapper_instance = Scrapper()
-        #product = self.search_entry.get()
-        #result = scrapper_instance.scrape_sites(product)
-        #rint(result)
-        res = {'emag': {'product_link': 'https://www.emag.ro/telefon-mobil-apple-iphone-14-128gb-5g-midnight-mpuf3rx-a/pd/DR2Y4LMBM/?X-Search-Id=af1c18212eef94c41807&X-Product-Id=101075717&X-Search-Page=1&X-Search-Position=0&X-Section=search&X-MB=0&X-Search-Action=view', 'product_image': 'https://s13emagst.akamaized.net/products/48592/48591192/images/res_749904e2b5777dea6eb322cfb68742a1.jpg?width=720&height=720&hash=A31AEC0C4CD4D28F3C10772C8315D943', 'price': '4.529,99 ', 'name': 'Telefon mobil Apple iPhone 14, 128GB, 5G, Midnight'}, 'flanco': {'product_link': 'https://www.flanco.ro/telefon-mobil-apple-iphone-14-5g-128gb-pur', 'product_image': 'https://www.flanco.ro/media/catalog/product/cache/e53d4628cd85067723e6ea040af871ec/i/p/iphone_14_purple_1.jpg', 'price': '4.599,99 lei', 'name': 'Telefon mobil Apple iPhone 14 5G, 128GB, Purple'}, 'cel': {'product_link': 'https://www.cel.ro/telefon-mobil-apple-iphone-14-5g-dual-sim-6gb-256gb-midnight-pNiEyMjQsNQ-l/', 'product_image': 'https://s1.cel.ro/images/Products/2022/12/16/Telefon-Mobil-Apple-iPhone-14-5G-Dual-SIM-6GB-256GB-Midnight.jpg', 'price': '5107 lei', 'name': 'Telefon Mobil Apple iPhone 14 5G Dual SIM 6GB 256GB Midnight'}, 'altex': {'product_link': 'https://altex.ro/telefon-apple-iphone-14-5g-256gb-blue/cpd/SMTIP142BL/', 'product_image': 'https://lcdn.altex.ro/resize/media/catalog/product/i/p/16fa6a9aef7ffd6209d5fd9338ffa0b1/iphone_14_blue-1_d611427e.jpg', 'price': '4.978', 'name': 'Telefon APPLE iPhone 14 5G, 256GB, Blue'}}
+        self.progress_bar = customtkinter.CTkProgressBar(master=self,width=200,height=20,border_width=3,corner_radius=10,mode='indeterminate')
+        self.progress_bar.place(relx=0.3,rely=0.3)
 
 
+    def start_scrapping(self):
+        self.progress_bar.start()
+        self.progress_bar.set(0)
 
-        self.image.create_frame_content(res)
+    def stop_scrapping(self):
+        self.progress_bar.destroy()
+
+    def handle_scraping(self):
+        scrapper_instance = Scrapper()
+        product = self.search_entry.get()
+        self.start_scrapping()
+        scrapping_thread = ResultsScrape(scrapper_instance,product)
+        scrapping_thread.start()
+        self.monitor(scrapping_thread)
+
+    def monitor(self,thread):
+        if thread.is_alive():
+            self.after(100,lambda:self.monitor(thread))
+        else:
+            self.stop_scrapping()
+            res = thread.result
+            self.generate_results(res)
+
+
+
+    def generate_results(self,result):
+
+        self.image.create_frame_content(result)
+
 
 
 
