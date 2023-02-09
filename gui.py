@@ -89,13 +89,13 @@ class App(customtkinter.CTk):
         self.image.grid(row=1,column=1,padx=10,pady=20)
 
     def generate_results(self):
-        #scrapper_instance = Scrapper()
-        #product = self.search_entry.get()
-        #result = scrapper_instance.scrape_sites(product)
-        #print(result)
-        a= {'emag': {'product_link': 'https://www.emag.ro/telefon-mobil-apple-iphone-14-128gb-5g-midnight-mpuf3rx-a/pd/DR2Y4LMBM/?X-Search-Id=9e4db57263810a6078d5&X-Product-Id=101075717&X-Search-Page=1&X-Search-Position=0&X-Section=search&X-MB=0&X-Search-Action=view', 'product_image': 'https://s13emagst.akamaized.net/products/48592/48591192/images/res_749904e2b5777dea6eb322cfb68742a1.jpg?width=720&height=720&hash=A31AEC0C4CD4D28F3C10772C8315D943', 'price': '4.529,99 Lei', 'name': 'Telefon mobil Apple iPhone 14, 128GB, 5G, Midnight'}, 'flanco': {'flanco': 'No results'}, 'cel': {'product_link': None, 'product_image': None, 'price': None, 'name': None}, 'altex': {'product_link': 'https://altex.ro/telefon-apple-iphone-14-5g-256gb-blue/cpd/SMTIP142BL/', 'product_image': 'https://lcdn.altex.ro/resize/media/catalog/product/i/p/16fa6a9aef7ffd6209d5fd9338ffa0b1/iphone_14_blue-1_d611427e.jpg', 'price': '4.999', 'name': 'Telefon APPLE iPhone 14 5G, 256GB, Blue'}}
+        scrapper_instance = Scrapper()
+        product = self.search_entry.get()
+        result = scrapper_instance.scrape_sites(product)
+        print(result)
+        
 
-        self.image.create_frame_content(a)
+        self.image.create_frame_content(result)
 
 
 

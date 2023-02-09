@@ -51,14 +51,14 @@ class Scrapper:
             search_bar.send_keys(product)
             search_bar.send_keys(Keys.ENTER)
             select = Select(self.driver.find_element(By.ID,'sorter'))
-            select.select_by_visible_text('Pret Ascendent')
-
-            all_products = self.driver.find_element(By.CLASS_NAME,'category-list-view')
-            product_link = all_products.find_element(By.TAG_NAME,'li').find_element(By.CLASS_NAME,'product-item-info').find_element(By.XPATH,'//*[@id="product-item-info_187852"]/a[1]').get_attribute('href')
-            self.driver.get(product_link)
+            select.select_by_visible_text('Relevanta')
+            product = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div[2]/div/div[3]/div/div[2]/ol/li[1]').click()
             product_image = self.driver.find_element(By.XPATH,'/html/body/div[2]/main/div[2]/div/div/div[1]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/figure[1]/a/img').get_attribute('src')
-            product_price = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div/div/div[1]/div[2]/div[1]/div/div[1]/div[2]/div/span/span').text
+            product_price = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div/div/div[1]/div[2]/div[1]/div/div[1]/div[3]/div/span[2]/span').text
+            if not  product_price[-3:] == 'lei':
+                product_price = product_price +'lei'
             product_name = self.driver.find_element(By.XPATH,'//*[@id="maincontent"]/div[2]/div/div/div[1]/div[1]/div[1]/div[1]/div[1]/div/h1/span').text
+            product_link = self.driver.current_url[:-8]
 
 
             return {
@@ -95,36 +95,36 @@ class Scrapper:
             search_bar = self.driver.find_element(By.ID,"keyword")
             search_bar.send_keys(product)
             search_bar.send_keys(Keys.ENTER)
-            best_products = []
+            search_result = []
             for i in range(1,5):
-                best_products.append(self.driver.find_element(By.CSS_SELECTOR,f"#bodycode > div.listingPageWrapper > div.listingWrapper > div.productlisting > div:nth-child({i})"))
+                search_result.append(self.driver.find_element(By.CSS_SELECTOR,f'#bodycode > div.listingPageWrapper > div.listingWrapper > div.productlisting > div:nth-child({i})'))
+
             best_item_price = None
-            best_item_link = None
-            best_item_image = None
-            best_item_name = None
-            for element in best_products:
-                product_name = element.find_element(By.CLASS_NAME,"productTitle").text
-                corect_product = True if all(x in product_name for x in product.split()) else False
-                if corect_product:
-                    product_price =int( element.find_element(By.CLASS_NAME,"pret_n").text[:-3])
-                    product_link = element.find_element(By.TAG_NAME,"a").get_attribute("href")
-                    product_image = element.find_element(By.TAG_NAME,"img").get_attribute("src")
-                    if best_item_price is None:
-                        best_item_price = product_price
-                        best_item_image = product_image
-                        best_item_link = product_link
-                        best_item_name = product_name
-                    elif product_price < best_item_price:
-                        best_item_price = product_price
-                        best_item_image = product_image
-                        best_item_link = product_link
-                        best_item_name = product_name
+            best_product = None
+
+            for element in search_result:
+                product_price = int(element.find_element(By.CLASS_NAME, "pret_n").text[:-3])
+                if best_item_price is None:
+                    best_item_price = product_price
+                    best_product = element
+                elif product_price < best_item_price:
+                    best_item_price = product_price
+                    best_product = element
+
+            product_price = best_product.find_element(By.CLASS_NAME, "pret_n").text
+            print(product_price)
+            product_link = best_product.find_element(By.TAG_NAME, "a").get_attribute("href")
+            print(product_link)
+            product_image = best_product.find_element(By.TAG_NAME, "img").get_attribute("src")
+            print(product_image)
+            product_name = best_product.find_element(By.CLASS_NAME,"productTitle").text
+            print(product_name)
 
             return {
-                'product_link':best_item_link,
-                'product_image':best_item_image,
-                'price':best_item_price,
-                'name':best_item_name
+                'product_link':product_link,
+                'product_image':product_image,
+                'price':product_price,
+                'name':product_name
             }
         except:
             return {"cel":"No results"}
@@ -136,6 +136,7 @@ class Scrapper:
             "cel": self.scrape_cel(product),
             "altex":self.scrape_altex(product)
         }
+
 
 
 
