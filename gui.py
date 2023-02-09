@@ -76,17 +76,17 @@ class App(customtkinter.CTk):
 
     def __init__(self):
         super().__init__()
-        self.geometry("800x640")
+        self.geometry("1080x900")
         self.title("Price Checker")
 
 
 
-        self.search_button = customtkinter.CTkButton(master=self,width=40,height=20,border_width=0,corner_radius=8,text="Search",text_color='white',command=self.generate_results,fg_color='#E74C3C')
-        self.search_button.place(relx=0.2,rely=0.5)
+        self.search_button = customtkinter.CTkButton(master=self,width=80,height=30,border_width=0,corner_radius=8,text="Search",text_color='white',command=self.generate_results,fg_color='#E74C3C')
+        self.search_button.place(relx=0.16,rely=0.25)
         self.search_entry = customtkinter.CTkEntry(master=self,placeholder_text="Enter product name",width=220,height=40,border_width=2,corner_radius=10,fg_color='#ECF0F1',border_color='#E74C3C')
-        self.search_entry.place(relx=0.2,rely=0.6)
+        self.search_entry.place(relx=0.1,rely=0.2)
         self.image = ResultFrame(master=self,width=600,height=800,fg_color="white")
-        self.image.place(relx=0.6,rely=0.1)
+        self.image.place(relx=0.5,rely=0)
 
     def generate_results(self):
         #scrapper_instance = Scrapper()
