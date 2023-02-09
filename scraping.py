@@ -112,13 +112,10 @@ class Scrapper:
                     best_product = element
 
             product_price = best_product.find_element(By.CLASS_NAME, "pret_n").text
-            print(product_price)
             product_link = best_product.find_element(By.TAG_NAME, "a").get_attribute("href")
-            print(product_link)
             product_image = best_product.find_element(By.TAG_NAME, "img").get_attribute("src")
-            print(product_image)
             product_name = best_product.find_element(By.CLASS_NAME,"productTitle").text
-            print(product_name)
+
 
             return {
                 'product_link':product_link,

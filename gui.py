@@ -82,20 +82,22 @@ class App(customtkinter.CTk):
 
 
         self.search_button = customtkinter.CTkButton(master=self,width=40,height=20,border_width=0,corner_radius=8,text="Search",text_color='white',command=self.generate_results,fg_color='#E74C3C')
-        self.search_button.place(relx=0.7,rely=0.5)
+        self.search_button.place(relx=0.2,rely=0.5)
         self.search_entry = customtkinter.CTkEntry(master=self,placeholder_text="Enter product name",width=220,height=40,border_width=2,corner_radius=10,fg_color='#ECF0F1',border_color='#E74C3C')
-        self.search_entry.place(relx=0.6,rely=0.6)
+        self.search_entry.place(relx=0.2,rely=0.6)
         self.image = ResultFrame(master=self,width=600,height=800,fg_color="white")
-        self.image.grid(row=1,column=1,padx=10,pady=20)
+        self.image.place(relx=0.6,rely=0.1)
 
     def generate_results(self):
-        scrapper_instance = Scrapper()
-        product = self.search_entry.get()
-        result = scrapper_instance.scrape_sites(product)
-        print(result)
-        
+        #scrapper_instance = Scrapper()
+        #product = self.search_entry.get()
+        #result = scrapper_instance.scrape_sites(product)
+        #rint(result)
+        res = {'emag': {'product_link': 'https://www.emag.ro/telefon-mobil-apple-iphone-14-128gb-5g-midnight-mpuf3rx-a/pd/DR2Y4LMBM/?X-Search-Id=af1c18212eef94c41807&X-Product-Id=101075717&X-Search-Page=1&X-Search-Position=0&X-Section=search&X-MB=0&X-Search-Action=view', 'product_image': 'https://s13emagst.akamaized.net/products/48592/48591192/images/res_749904e2b5777dea6eb322cfb68742a1.jpg?width=720&height=720&hash=A31AEC0C4CD4D28F3C10772C8315D943', 'price': '4.529,99 ', 'name': 'Telefon mobil Apple iPhone 14, 128GB, 5G, Midnight'}, 'flanco': {'product_link': 'https://www.flanco.ro/telefon-mobil-apple-iphone-14-5g-128gb-pur', 'product_image': 'https://www.flanco.ro/media/catalog/product/cache/e53d4628cd85067723e6ea040af871ec/i/p/iphone_14_purple_1.jpg', 'price': '4.599,99 lei', 'name': 'Telefon mobil Apple iPhone 14 5G, 128GB, Purple'}, 'cel': {'product_link': 'https://www.cel.ro/telefon-mobil-apple-iphone-14-5g-dual-sim-6gb-256gb-midnight-pNiEyMjQsNQ-l/', 'product_image': 'https://s1.cel.ro/images/Products/2022/12/16/Telefon-Mobil-Apple-iPhone-14-5G-Dual-SIM-6GB-256GB-Midnight.jpg', 'price': '5107 lei', 'name': 'Telefon Mobil Apple iPhone 14 5G Dual SIM 6GB 256GB Midnight'}, 'altex': {'product_link': 'https://altex.ro/telefon-apple-iphone-14-5g-256gb-blue/cpd/SMTIP142BL/', 'product_image': 'https://lcdn.altex.ro/resize/media/catalog/product/i/p/16fa6a9aef7ffd6209d5fd9338ffa0b1/iphone_14_blue-1_d611427e.jpg', 'price': '4.978', 'name': 'Telefon APPLE iPhone 14 5G, 256GB, Blue'}}
 
-        self.image.create_frame_content(result)
+
+
+        self.image.create_frame_content(res)
 
 
 
